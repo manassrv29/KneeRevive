@@ -1,0 +1,220 @@
+.assessment-container {
+  min-height: 100vh;
+  background: linear-gradient(165deg, #f0f7ff 0%, #e6f4ff 100%);
+  color: #104e8b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.assessment-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  color: #0a4d8c;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.assessment-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.assessment-header p {
+  color: #5a7a9d;
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.assessment-header:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #0a6cbb, #60a5fa);
+  border-radius: 2px;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.error-text {
+  color: #e53e3e;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 1rem;
+  background-color: rgba(229, 62, 62, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid #e53e3e;
+}
+
+.metric-card {
+  padding: 2rem;
+  text-align: center;
+  background-color: #ffffff;
+  box-shadow: 0 10px 30px rgba(12, 80, 139, 0.1);
+  border-radius: 12px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  border: 1px solid rgba(159, 209, 255, 0.3);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(12, 80, 139, 0.15);
+  border-color: #60a5fa;
+}
+
+.metric-card h6 {
+  font-size: 1rem;
+  color: #5a7a9d;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.metric-card h4 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #0a6cbb;
+  margin: 0;
+}
+
+.tooltip {
+  font-size: 0.85rem;
+  color: #5a7a9d;
+  margin-top: 0.8rem;
+}
+
+.progress-section {
+  margin-top: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(12, 80, 139, 0.1);
+  border: 1px solid rgba(159, 209, 255, 0.3);
+}
+
+.progress-section h6 {
+  font-size: 1.2rem;
+  color: #0a4d8c;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.status-text {
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #0a6cbb;
+  font-size: 1.8rem !important;
+}
+
+.status-text.improvement {
+  color: #0ca678;
+}
+
+.status-text.stable {
+  color: #0a6cbb;
+}
+
+.status-text.deterioration {
+  color: #e53e3e;
+}
+
+.progress-bar {
+  height: 12px !important;
+  border-radius: 6px !important;
+  background-color: rgba(10, 108, 187, 0.15) !important;
+}
+
+.progress-bar .MuiLinearProgress-bar {
+  background: linear-gradient(90deg, #0a6cbb, #60a5fa) !important;
+  border-radius: 6px !important;
+}
+
+.progress-bar.low .MuiLinearProgress-bar {
+  background: linear-gradient(90deg, #0ca678, #34d399) !important;
+}
+
+.progress-bar.medium .MuiLinearProgress-bar {
+  background: linear-gradient(90deg, #0a6cbb, #60a5fa) !important;
+}
+
+.progress-bar.high .MuiLinearProgress-bar {
+  background: linear-gradient(90deg, #e53e3e, #fc8181) !important;
+}
+
+.fetch-button {
+  background-color: #0a6cbb !important;
+  color: #ffffff !important;
+  padding: 0.8rem 2rem !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  font-size: 1rem !important;
+  text-transform: none !important;
+  box-shadow: 0 4px 12px rgba(10, 108, 187, 0.25) !important;
+}
+
+.fetch-button:hover {
+  background-color: #0a5aa1 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(10, 108, 187, 0.3) !important;
+}
+
+.fetch-button:disabled {
+  background-color: #c0c6cc !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+
+.graph-container {
+  margin-top: 2rem;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(12, 80, 139, 0.1);
+  border: 1px solid rgba(159, 209, 255, 0.3);
+}
+
+.graph-title {
+  color: #0a4d8c !important;
+  font-weight: 600 !important;
+  text-align: center;
+  margin-bottom: 1.5rem !important;
+  font-size: 1.2rem !important;
+}
+
+@media (max-width: 768px) {
+  .assessment-container {
+    padding: 1.5rem;
+  }
+  
+  .assessment-header h1 {
+    font-size: 2rem;
+  }
+
+  .metric-card {
+    padding: 1.5rem;
+  }
+
+  .metric-card h4 {
+    font-size: 1.8rem;
+  }
+}

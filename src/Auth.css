@@ -1,0 +1,284 @@
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  /* Container */
+  .container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: #f5f7fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+  .forms-container {
+    position: relative;
+    width: 768px;
+    max-width: 90%;
+    height: 480px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .signin-signup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    transition: all 0.6s ease-in-out;
+  }
+  
+  /* Form Styling */
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    width: 50%;
+    padding: 3rem;
+    transition: all 0.6s ease-in-out;
+  }
+  
+  .sign-in-form {
+    z-index: 2;
+  }
+  
+  .sign-up-form {
+    z-index: 1;
+    opacity: 0;
+  }
+  
+  .container.sign-up-mode .sign-in-form {
+    opacity: 0;
+  }
+  
+  .container.sign-up-mode .sign-up-form {
+    opacity: 1;
+  }
+  
+  form h2.title {
+    font-size: 2rem;
+    color: #0288d1;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .social-icons {
+    display: flex;
+    margin-bottom: 1.5rem;
+  }
+  
+  .social-icons a {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #e1e1e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    color: #444;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+  }
+  
+  /* Add Font Awesome for social icons */
+  @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+  
+  .social-icons a:hover {
+    border-color: #0288d1;
+    color: #0288d1;
+  }
+  
+  form p {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 1.5rem;
+  }
+  
+  .input-field {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  input {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 0.8rem;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+  
+  input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.2);
+  }
+  
+  .forgot-password {
+    font-size: 0.85rem;
+    color: #777;
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+  }
+  
+  .forgot-password:hover {
+    color: #0288d1;
+  }
+  
+  .btn {
+    padding: 0.8rem 2rem;
+    border: none;
+    background-color: #0288d1;
+    color: white;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    align-self: center;
+  }
+  
+  .btn:hover {
+    background-color: #026aa9;
+    transform: translateY(-2px);
+  }
+  
+  /* Panels Container */
+  .panels-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    pointer-events: none;
+  }
+  
+  .panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    pointer-events: all;
+    z-index: 7;
+    width: 50%;
+    height: 100%;
+    background-color: #0288d1;
+    color: white;
+    transition: transform 0.6s ease-in-out;
+  }
+  
+  .left-panel {
+    position: absolute;
+    right: 0;
+  }
+  
+  .right-panel {
+    position: absolute;
+    left: 0;
+    transform: translateX(-100%);
+  }
+  
+  .container.sign-up-mode .left-panel {
+    transform: translateX(100%);
+  }
+  
+  .container.sign-up-mode .right-panel {
+    transform: translateX(0);
+  }
+  
+  /* Animation for signin-signup */
+  .container.sign-up-mode .signin-signup {
+    transform: translateX(100%);
+  }
+  
+  .panel .content {
+    color: white;
+    transition: transform 0.9s ease-in-out, opacity 0.5s ease-in-out;
+    width: 100%;
+  }
+  
+  .panel h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  .panel p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1.5rem;
+    max-width: 260px;
+  }
+  
+  .panel .btn.transparent {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+  }
+  
+  .panel .btn.transparent:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Animation for panel content */
+  .right-panel .content {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  
+  .container.sign-up-mode .right-panel .content {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  
+  .container.sign-up-mode .left-panel .content {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  
+  /* Hover effects */
+  .panels-container:hover .panel {
+    background: linear-gradient(135deg, #0277bd, #29b6f6);
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .forms-container {
+      height: auto;
+    }
+    
+    .signin-signup {
+      flex-direction: column;
+      height: auto;
+    }
+    
+    form {
+      width: 100%;
+      padding: 2rem;
+    }
+    
+    .panel {
+      display: none;
+    }
+    
+    .container.sign-up-mode .signin-signup {
+      transform: translateY(-100%);
+    }
+  }
