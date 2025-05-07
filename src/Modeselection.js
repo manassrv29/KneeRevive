@@ -4,11 +4,9 @@ import {
   Typography, 
   Button, 
   Grid, 
-  Paper, 
   Container, 
   useTheme, 
   useMediaQuery,
-  Divider,
   Card,
   CardContent,
   Avatar
