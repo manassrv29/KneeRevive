@@ -6,68 +6,31 @@ import "./SaviourMode.css";
 import { useNavigate } from "react-router-dom";
 import { 
   FaChartLine, 
-  FaRobot, 
-  FaHeartbeat, 
-  FaChevronRight, 
   FaArrowUp, 
-  FaArrowDown,
-  FaCalendarAlt,
-  FaBell,
-  FaPlay,
-  FaPause,
-  FaStop,
-  FaRecordVinyl
+  FaArrowDown
 } from "react-icons/fa";
+import { Box, Typography, Paper, Grid, Button, Fade, Avatar } from '@mui/material';
+
+const colors = {
+  aqua: '#00A8E8',
+  green: '#22c55e',
+  lightBg: '#F8FEFF',
+  cardBg: 'rgba(255,255,255,0.85)',
+  shadow: '0 8px 32px rgba(0,168,232,0.10)',
+  statBlue: '#1B4965',
+  statGreen: '#22c55e',
+  statGrey: '#5a7a9d',
+};
 
 const SaviourMode = () => {
   const navigate = useNavigate();
-  const [monitoringStatus, setMonitoringStatus] = useState("inactive"); // inactive, active, paused
+  const [fadeIn, setFadeIn] = useState(false);
+  const [monitoringStatus, setMonitoringStatus] = useState("inactive"); // for stat coloring
   const [monitorDuration, setMonitorDuration] = useState(0);
-  const [timerInterval, setTimerInterval] = useState(null);
 
-  // Handle monitoring status changes
   useEffect(() => {
-    if (monitoringStatus === "active") {
-      const interval = setInterval(() => {
-        setMonitorDuration(prev => prev + 1);
-      }, 1000);
-      setTimerInterval(interval);
-    } else if (timerInterval) {
-      clearInterval(timerInterval);
-    }
-
-    return () => {
-      if (timerInterval) clearInterval(timerInterval);
-    };
-  }, [monitoringStatus]);
-
-  // Format time for display
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60).toString().padStart(2, "0");
-    const secs = (seconds % 60).toString().padStart(2, "0");
-    return `${mins}:${secs}`;
-  };
-
-  // Start monitoring
-  const startMonitoring = () => {
-    setMonitoringStatus("active");
-  };
-
-  // Pause monitoring
-  const pauseMonitoring = () => {
-    setMonitoringStatus("paused");
-  };
-
-  // Resume monitoring
-  const resumeMonitoring = () => {
-    setMonitoringStatus("active");
-  };
-
-  // Stop monitoring
-  const stopMonitoring = () => {
-    setMonitoringStatus("inactive");
-    setMonitorDuration(0);
-  };
+    setFadeIn(true);
+  }, []);
 
   // Sample data for stats
   const stats = [
@@ -92,126 +55,132 @@ const SaviourMode = () => {
   ];
 
   return (
-    <div className="saviour-container">
-      <h1 className="saviour-title">Knee Movement Insights</h1>
-      <p className="saviour-subtitle">Your personal recovery assistant</p>
+    <Box sx={{
+      minHeight: '100vh',
+      background: `linear-gradient(160deg, ${colors.lightBg} 0%, #e0f7fa 100%)`,
+      py: { xs: 3, md: 6 },
+      px: { xs: 1, md: 0 },
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }}>
+      <Fade in={fadeIn} timeout={900}>
+        <Box sx={{ width: '100%', maxWidth: 900 }}>
+          <Typography variant="h3" sx={{
+            fontWeight: 800,
+            color: colors.aqua,
+            mb: 1,
+            textAlign: 'center',
+            letterSpacing: '-0.5px',
+            textShadow: '0 2px 12px #00A8E822'
+          }}>
+            Knee Movement Insights
+          </Typography>
+          <Typography variant="subtitle1" sx={{
+            color: colors.statGrey,
+            textAlign: 'center',
+            mb: 4,
+            fontWeight: 500
+          }}>
+            Your personal recovery assistant
+          </Typography>
 
-      {/* Stats Section */}
-      <div className="stats-row">
-        {stats.map((stat, index) => (
-          <div className="stat-card" key={index}>
-            <div className="stat-value">{stat.value}</div>
-            <div className="stat-label">{stat.label}</div>
-            <div className={`stat-trend ${stat.trendDirection === "up" ? "trend-up" : "trend-down"}`}>
-              {stat.trendDirection === "up" ? <FaArrowUp /> : <FaArrowDown />}
-              {stat.trend} this week
-            </div>
-          </div>
-        ))}
-      </div>
+          {/* Stats Section */}
+          <Grid container spacing={3} justifyContent="center" sx={{ mb: 4 }}>
+            {stats.map((stat, index) => (
+              <Grid item xs={12} sm={4} key={index}>
+                <Paper elevation={3} sx={{
+                  p: 3,
+                  borderRadius: 3,
+                  background: colors.cardBg,
+                  boxShadow: colors.shadow,
+                  textAlign: 'center',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  '&:hover': {
+                    transform: 'translateY(-4px) scale(1.03)',
+                    boxShadow: '0 16px 32px #00A8E822',
+                  }
+                }}>
+                  <Typography variant="h4" sx={{
+                    fontWeight: 800,
+                    color: index === 0 ? colors.aqua : index === 1 ? colors.green : colors.statBlue,
+                    mb: 1
+                  }}>{stat.value}</Typography>
+                  <Typography variant="subtitle1" sx={{
+                    color: colors.statBlue,
+                    fontWeight: 700,
+                    mb: 0.5
+                  }}>{stat.label}</Typography>
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: stat.trendDirection === 'up' ? colors.green : '#e53e3e',
+                    fontWeight: 600,
+                    fontSize: 15
+                  }}>
+                    {stat.trendDirection === 'up' ? <FaArrowUp /> : <FaArrowDown />} {stat.trend} this week
+                  </Box>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
 
-      <div className="chart-card">
-        <div className="chart-header">
-          <div className="chart-icon-wrapper">
-            <FaChartLine size={24} className="chart-icon" />
-          </div>
-          <h2>Real-Time Sensor Data</h2>
-        </div>
-        <p className="chart-description">
-          Track your knee movement patterns and monitor progress over time. Data is collected from advanced sensors for precise analysis.
-        </p>
-        
-        <div className="monitoring-controls">
-          <div className="monitoring-status">
-            <span className={`status-dot ${monitoringStatus === "active" ? "active" : monitoringStatus === "paused" ? "paused" : ""}`}></span>
-            <span className="status-text">
-              {monitoringStatus === "active" 
-                ? `Monitoring Active (${formatTime(monitorDuration)})` 
-                : monitoringStatus === "paused" 
-                  ? `Monitoring Paused (${formatTime(monitorDuration)})` 
-                  : "Monitoring Inactive"}
-            </span>
-          </div>
-          <div className="controls-buttons">
-            {monitoringStatus === "inactive" && (
-              <button onClick={startMonitoring} className="control-button start-button">
-                <FaPlay size={14} /> Start Monitoring
-              </button>
-            )}
-            {monitoringStatus === "active" && (
-              <>
-                <button onClick={pauseMonitoring} className="control-button pause-button">
-                  <FaPause size={14} /> Pause
-                </button>
-                <button onClick={stopMonitoring} className="control-button stop-button">
-                  <FaStop size={14} /> Stop
-                </button>
-              </>
-            )}
-            {monitoringStatus === "paused" && (
-              <>
-                <button onClick={resumeMonitoring} className="control-button resume-button">
-                  <FaPlay size={14} /> Resume
-                </button>
-                <button onClick={stopMonitoring} className="control-button stop-button">
-                  <FaStop size={14} /> Stop
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-        
-        <SensorChart />
-      </div>
-
-      <div className="options-section">
-        <div
-          className="option-card"
-          onClick={() => navigate("/weekly-assessment")}
-        >
-          <div className="card-icon-wrapper">
-            <FaCalendarAlt size={28} className="card-icon" />
-          </div>
-          <h2>Assessment of the Week</h2>
-          <p>
-            Review your weekly knee movement summary, progress charts, and any 
-            critical alerts. Get personalized recommendations based on your activity patterns.
-          </p>
-          <button className="option-button">
-            View Report <FaChevronRight size={12} />
-          </button>
-        </div>
-
-        <div className="option-card" onClick={() => navigate("/botknee")}>
-          <div className="card-icon-wrapper">
-            <FaRobot size={28} className="card-icon" />
-          </div>
-          <h2>Talk to BotKnee</h2>
-          <p>
-            Get AI-based feedback, professional advice, and personalized 
-            improvement tips for your recovery journey. Our virtual assistant is 
-            available 24/7.
-          </p>
-          <button className="option-button">
-            Chat Now <FaChevronRight size={12} />
-          </button>
-        </div>
-
-        <div className="option-card" onClick={() => navigate("/alerts")}>
-          <div className="card-icon-wrapper">
-            <FaBell size={28} className="card-icon" />
-          </div>
-          <h2>Alert Settings</h2>
-          <p>
-            Customize your notification preferences for movement alerts, 
-            reminders, and progress milestones. Stay informed about your knee health.
-          </p>
-          <button className="option-button">
-            Configure <FaChevronRight size={12} />
-          </button>
-        </div>
-      </div>
-    </div>
+          {/* Chart Card */}
+          <Paper elevation={4} sx={{
+            borderRadius: 4,
+            background: colors.cardBg,
+            boxShadow: colors.shadow,
+            p: { xs: 2, md: 4 },
+            mb: 4,
+            position: 'relative',
+            overflow: 'hidden',
+            maxWidth: 900,
+            mx: 'auto',
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Avatar sx={{ bgcolor: colors.aqua, color: '#fff', mr: 2 }}>
+                <FaChartLine size={24} />
+              </Avatar>
+              <Typography variant="h5" sx={{ fontWeight: 700, color: colors.statBlue }}>
+                Real-Time Sensor Data
+              </Typography>
+            </Box>
+            <Typography sx={{ color: colors.statGrey, mb: 2, fontWeight: 500 }}>
+              Track your knee movement patterns and monitor progress over time. Data is collected from advanced sensors for precise analysis.
+            </Typography>
+            <Box sx={{ borderRadius: 3, overflow: 'hidden', background: '#f0f7ff', p: { xs: 1, md: 2 } }}>
+              <SensorChart />
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+              <Button
+                variant="contained"
+                sx={{
+                  background: `linear-gradient(90deg, ${colors.aqua}, ${colors.green})`,
+                  color: '#fff',
+                  fontWeight: 700,
+                  borderRadius: 2,
+                  px: 3,
+                  py: 1.2,
+                  fontSize: '1.08rem',
+                  boxShadow: '0 2px 8px #22c55e22',
+                  textTransform: 'none',
+                  transition: 'background 0.3s, transform 0.2s',
+                  '&:hover': {
+                    background: colors.green,
+                    transform: 'scale(1.04)'
+                  }
+                }}
+                onClick={() => navigate('/weekly-assessment')}
+                startIcon={<FaArrowUp />}
+              >
+                Weekly Assessment
+              </Button>
+            </Box>
+          </Paper>
+        </Box>
+      </Fade>
+    </Box>
   );
 };
 

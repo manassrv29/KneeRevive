@@ -9,9 +9,23 @@ import {
   Legend,
   ReferenceDot,
 } from "recharts";
+import { Box, Typography, Button, Paper, Stack } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
 
 const THRESHOLD_ACCEL = 1.5;
 const THRESHOLD_GYRO = 100;
+
+const colors = {
+  blueBg: '#17406D', // deep blue background
+  cardBg: '#fff', // white card
+  buttonBlue: '#1976d2', // MUI blue
+  buttonBlueDark: '#115293', // darker blue for hover
+  heading: '#1B263B', // dark blue/gray
+  text: '#334155', // blue-gray
+  yellow: '#facc15',
+  shadow: '0 8px 32px rgba(23,64,109,0.10)',
+};
 
 const SensorChart = () => {
   const [allData, setAllData] = useState([]);
@@ -82,69 +96,122 @@ const SensorChart = () => {
   );
 
   return (
-    <div className="p-4 bg-[#1e293b] rounded-xl shadow-md">
-      <h2 className="text-2xl font-bold mb-4 text-cyan-400 text-center">
-        Live Knee Sensor Monitoring
-      </h2>
-
-      <div className="flex justify-center gap-4 mb-4">
-        <button
-          onClick={handleStart}
-          className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg"
-        >
-          {hasStarted ? "Resume" : "Start Monitoring"}
-        </button>
-        <button
-          onClick={handlePause}
-          className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg"
-        >
-          Pause
-        </button>
-      </div>
-
-      <LineChart
-        width={1000}
-        height={400}
-        data={displayedData}
-        margin={{ top: 20, right: 30, left: 10, bottom: 10 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="timestamp"
-          label={{ value: "Time (s)", position: "insideBottomRight", offset: 0 }}
-        />
-        <YAxis
-          label={{ value: "Sensor Value", angle: -90, position: "insideLeft" }}
-        />
-        <Tooltip />
-        <Legend />
-
-        <Line type="monotone" dataKey="ax" stroke="#8884d8" dot={false} />
-        <Line type="monotone" dataKey="ay" stroke="#82ca9d" dot={false} />
-        <Line type="monotone" dataKey="az" stroke="#ffc658" dot={false} />
-
-        <Line type="monotone" dataKey="gx" stroke="#ff7300" dot={false} />
-        <Line type="monotone" dataKey="gy" stroke="#0088FE" dot={false} />
-        <Line type="monotone" dataKey="gz" stroke="#00C49F" dot={false} />
-
-        {jerkPoints.map((point, index) => (
-          <ReferenceDot
-            key={index}
-            x={point.timestamp}
-            y={point.ax}
-            r={5}
-            fill="red"
-            stroke="none"
-            label={{
-              value: "Jerk",
-              position: "top",
-              fill: "red",
-              fontSize: 10,
+    <Box sx={{
+      background: colors.blueBg,
+      borderRadius: 4,
+      p: { xs: 1, md: 3 },
+      mb: 2,
+    }}>
+      <Paper elevation={4} sx={{
+        p: { xs: 2, md: 4 },
+        borderRadius: 4,
+        background: colors.cardBg,
+        boxShadow: colors.shadow,
+        maxWidth: '100%',
+      }}>
+        <Typography variant="h4" sx={{
+          fontWeight: 800,
+          color: colors.heading,
+          mb: 2,
+          textAlign: 'center',
+          letterSpacing: '-0.5px',
+        }}>
+          Live Knee Sensor Monitoring
+        </Typography>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center" alignItems="center" mb={3}>
+          <Button
+            variant="contained"
+            onClick={handleStart}
+            startIcon={<PlayArrowIcon />}
+            sx={{
+              background: colors.buttonBlue,
+              color: '#fff',
+              fontWeight: 700,
+              borderRadius: 2,
+              px: 3,
+              py: 1.2,
+              fontSize: '1.08rem',
+              boxShadow: '0 2px 8px #1976d222',
+              textTransform: 'none',
+              transition: 'background 0.3s, transform 0.2s',
+              '&:hover': {
+                background: colors.buttonBlueDark,
+                transform: 'scale(1.04)'
+              }
             }}
-          />
-        ))}
-      </LineChart>
-    </div>
+          >
+            {hasStarted ? "Resume" : "Start Monitoring"}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handlePause}
+            startIcon={<PauseIcon />}
+            sx={{
+              background: colors.yellow,
+              color: colors.heading,
+              fontWeight: 700,
+              borderRadius: 2,
+              px: 3,
+              py: 1.2,
+              fontSize: '1.08rem',
+              boxShadow: '0 2px 8px #facc1522',
+              textTransform: 'none',
+              transition: 'background 0.3s, transform 0.2s',
+              '&:hover': {
+                background: '#ffe066',
+                transform: 'scale(1.04)'
+              }
+            }}
+          >
+            Pause
+          </Button>
+        </Stack>
+        <Box sx={{ width: '100%', overflowX: 'auto' }}>
+          <LineChart
+            width={1000}
+            height={400}
+            data={displayedData}
+            margin={{ top: 20, right: 30, left: 10, bottom: 10 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="timestamp"
+              label={{ value: "Time (s)", position: "insideBottomRight", offset: 0 }}
+            />
+            <YAxis
+              label={{ value: "Sensor Value", angle: -90, position: "insideLeft" }}
+            />
+            <Tooltip />
+            <Legend />
+
+            <Line type="monotone" dataKey="ax" stroke="#8884d8" dot={false} />
+            <Line type="monotone" dataKey="ay" stroke="#82ca9d" dot={false} />
+            <Line type="monotone" dataKey="az" stroke="#ffc658" dot={false} />
+
+            <Line type="monotone" dataKey="gx" stroke="#ff7300" dot={false} />
+            <Line type="monotone" dataKey="gy" stroke="#0088FE" dot={false} />
+            <Line type="monotone" dataKey="gz" stroke="#00C49F" dot={false} />
+
+            {jerkPoints.map((point, index) => (
+              <ReferenceDot
+                key={index}
+                x={point.timestamp}
+                y={point.ax}
+                r={5}
+                fill="red"
+                stroke="none"
+                label={{
+                  value: "Jerk",
+                  position: "top",
+                  fill: "red",
+                  fontSize: 10,
+                }}
+              />
+            ))}
+          </LineChart>
+        </Box>
+      </Paper>
+    </Box>
   );
 };
 
