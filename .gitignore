@@ -1,0 +1,31 @@
+# Node.js
+node_modules/
+dist/
+build/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+*.env
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# TensorFlow Lite model (if you want to exclude it)
+# model.tflite
+
+# VS Code settings
+.vscode/
+.history/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Dependency files backup
+package-lock.json

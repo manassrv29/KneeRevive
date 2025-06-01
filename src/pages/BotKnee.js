@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./BotKnee.css";
 
+// Backend API URL - can be moved to environment variables for different environments
+const API_URL = "http://localhost:5000";
+
 const BotKnee = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [isConnected, setIsConnected] = useState(true); // Track backend connection status
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -26,7 +30,29 @@ const BotKnee = () => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
+    
+    // Check if backend is available
+    checkBackendConnection();
   }, []);
+
+  // Check if the backend server is running
+  const checkBackendConnection = async () => {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(`${API_URL}/chatbot`, {
+        method: "OPTIONS",
+        signal: controller.signal
+      }).catch(() => null);
+      
+      clearTimeout(timeoutId);
+      setIsConnected(response && response.ok);
+    } catch (error) {
+      console.error("Backend connection check failed:", error);
+      setIsConnected(false);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -49,38 +75,60 @@ const BotKnee = () => {
     setInput("");
     setIsTyping(true);
 
+    // If backend is disconnected, show error message
+    if (!isConnected) {
+      setTimeout(() => {
+        setIsTyping(false);
+        appendMessage("Sorry, I'm unable to connect to the server. Please check if the backend is running on port 5000.", "bot");
+      }, 1000);
+      return;
+    }
+
     try {
-      // Simulated delay to show typing indicator
-      setTimeout(async () => {
-        try {
-          const response = await fetch("http://localhost:5000/chatbot", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              user_id: "user123",
-              message: userMessage,
-            }),
-          });
+      // Set a timeout for the fetch request
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+      
+      // Send the message to the backend
+      const response = await fetch(`${API_URL}/chatbot`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          user_id: "user123", // This could be dynamically set or stored in state
+          message: userMessage,
+        }),
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
 
-          const data = await response.json();
-          setIsTyping(false);
-
-          if (data.response) {
-            appendMessage(data.response, "bot");
-          } else {
-            appendMessage("I couldn't process that request. Could you try again?", "bot");
-          }
-        } catch (err) {
-          setIsTyping(false);
-          appendMessage("I'm having trouble connecting to the server. Please try again later.", "bot");
-          console.error("Server Error:", err);
-        }
-      }, 1000); // Simulated typing delay
-
-    } catch (err) {
+      const data = await response.json();
       setIsTyping(false);
-      appendMessage("Something went wrong. Please try again.", "bot");
-      console.error("Error:", err);
+
+      if (data && data.response) {
+        appendMessage(data.response, "bot");
+      } else {
+        appendMessage("I received your message but couldn't generate a proper response. Please try again.", "bot");
+      }
+    } catch (error) {
+      setIsTyping(false);
+      console.error("Error sending message to backend:", error);
+      
+      if (error.name === 'AbortError') {
+        appendMessage("Request timed out. The server took too long to respond.", "bot");
+      } else if (error.message.includes('Failed to fetch')) {
+        appendMessage("I'm having trouble connecting to the server. Please check if the backend is running.", "bot");
+        setIsConnected(false);
+      } else {
+        appendMessage("Something went wrong while processing your request. Please try again later.", "bot");
+      }
     }
   };
 
@@ -112,10 +160,20 @@ const BotKnee = () => {
     return groups;
   };
 
+  // Render connection status
+  const renderConnectionStatus = () => {
+    return (
+      <div className="header-status">
+        <div className={`status-dot ${isConnected ? 'connected' : 'disconnected'}`}></div>
+        <span>{isConnected ? 'Online' : 'Offline'}</span>
+      </div>
+    );
+  };
+
   return (
     <div className="chat-wrapper">
       <div className="chat-title">
-        <h1>KneeRevive Virtual Assistant</h1>
+        <h1>BotKnee Virtual Assistant</h1>
         <p>Get personalized help with your knee rehabilitation journey</p>
       </div>
       
@@ -127,12 +185,9 @@ const BotKnee = () => {
               <line x1="16" y1="8" x2="2" y2="22"></line>
               <line x1="17.5" y1="15" x2="9" y2="15"></line>
             </svg>
-            <span>KneeRevive Assistant</span>
+            <span>BotKnee Assistant</span>
           </div>
-          <div className="header-status">
-            <div className="status-dot"></div>
-            <span>Online</span>
-          </div>
+          {renderConnectionStatus()}
         </div>
         
         <div className="chat-box">
@@ -198,8 +253,12 @@ const BotKnee = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
+              disabled={!isConnected && messages.length > 0}
             />
-            <button onClick={sendMessage}>
+            <button 
+              onClick={sendMessage} 
+              disabled={!isConnected && messages.length > 0}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13"></line>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -207,6 +266,11 @@ const BotKnee = () => {
               Send
             </button>
           </div>
+          {!isConnected && messages.length > 0 && (
+            <div className="connection-error">
+              Backend server is offline. <button onClick={checkBackendConnection}>Retry connection</button>
+            </div>
+          )}
         </div>
       </div>
     </div>
