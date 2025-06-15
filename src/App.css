@@ -284,8 +284,7 @@
   /* Responsive adjustments */
   @media (max-width: 768px) {
     .App-header {
-      padding: 1rem;
-      padding-top: calc(var(--mobile-header-height) + var(--safe-area-inset-top));
+      padding-top: calc(2.5rem + env(safe-area-inset-top, 0px));
       padding-bottom: calc(1rem + var(--safe-area-inset-bottom));
       min-height: 100vh;
       min-height: -webkit-fill-available;
@@ -298,7 +297,9 @@
     }
     
     .App-content {
-      padding: 1rem;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+      padding-top: calc(1.5rem + env(safe-area-inset-top, 0px));
       padding-bottom: calc(1rem + var(--safe-area-inset-bottom));
       width: 100%;
       max-width: 100%;
@@ -430,6 +431,10 @@
     
     .footer-column {
       width: 100%;
+    }
+    
+    .card, .section {
+      margin-bottom: 2rem;
     }
   }
   
